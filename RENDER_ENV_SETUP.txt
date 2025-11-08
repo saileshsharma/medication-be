@@ -1,0 +1,128 @@
+╔══════════════════════════════════════════════════════════════╗
+║          RENDER ENVIRONMENT VARIABLES - QUICK SETUP          ║
+╚══════════════════════════════════════════════════════════════╝
+
+📍 Location: .env.render file in your backend folder
+
+🎯 STEP 1: Get Your DATABASE_URL
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+1. Go to: https://dashboard.render.com
+2. Look for your PostgreSQL database service
+3. Click on it
+4. Find "Internal Database URL" or "Connection String"
+5. Copy the entire URL (looks like):
+   postgresql://postgres:PASSWORD@dpg-xxxxx.oregon-postgres.render.com/DATABASE_NAME
+
+⚠️  If you DON'T have a PostgreSQL database yet:
+   - Click "New +" → "PostgreSQL"
+   - Name it: pixelpirates-db
+   - Select: Free tier
+   - Click "Create Database"
+   - Wait 1 minute for it to provision
+   - Then copy the "Internal Database URL"
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🎯 STEP 2: Add Variables to Render
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+1. Go to: https://dashboard.render.com
+2. Click: medication-be-1 (your backend service)
+3. Click: "Environment" (left sidebar)
+4. For EACH variable below, click "Add Environment Variable":
+
+┌────────────────────────────────────────────────────────────┐
+│ Variable 1: Database Connection (CRITICAL!)                │
+├────────────────────────────────────────────────────────────┤
+│ Key:   DATABASE_URL                                        │
+│ Value: [PASTE YOUR POSTGRESQL URL FROM STEP 1]             │
+│                                                            │
+│ Example:                                                   │
+│ postgresql://postgres:PASSWORD@dpg-xxxxx.render.com/dbname│
+└────────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────────┐
+│ Variable 2: Secret Key (REQUIRED)                          │
+├────────────────────────────────────────────────────────────┤
+│ Key:   SECRET_KEY                                          │
+│ Value: 21c5230dd5d917cbe1b6dee48442619e840467d3bb615aca211823e1167ed9b5
+└────────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────────┐
+│ Variable 3: Debug Mode (REQUIRED)                          │
+├────────────────────────────────────────────────────────────┤
+│ Key:   DEBUG                                               │
+│ Value: False                                               │
+└────────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────────┐
+│ Variable 4: Environment (REQUIRED)                         │
+├────────────────────────────────────────────────────────────┤
+│ Key:   ENVIRONMENT                                         │
+│ Value: production                                          │
+└────────────────────────────────────────────────────────────┘
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🎯 STEP 3: Save & Wait for Redeploy
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+1. After adding all 4 variables, click "Save Changes"
+2. Render will automatically redeploy (takes 2-3 minutes)
+3. Watch the "Logs" tab to see deployment progress
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🎯 STEP 4: Verify It's Working
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Run this command:
+
+curl https://medication-be-1.onrender.com/api/v1/health
+
+✅ SUCCESS looks like this:
+{
+  "status": "healthy",
+  "version": "1.0.0",
+  "database": "healthy",
+  "redis": "unhealthy"
+}
+
+Note: Redis "unhealthy" is OK - app works without it!
+
+❌ STILL BROKEN looks like this:
+{
+  "database": "unhealthy: connection refused"
+}
+→ Check that DATABASE_URL is set correctly
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📋 QUICK CHECKLIST
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+□ Created PostgreSQL database in Render
+□ Copied Internal Database URL
+□ Added DATABASE_URL to backend environment variables
+□ Added SECRET_KEY to backend environment variables
+□ Added DEBUG=False to backend environment variables
+□ Added ENVIRONMENT=production to backend environment variables
+□ Saved changes and waited for redeploy
+□ Tested health endpoint - shows "database": "healthy"
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+💡 COMMON ISSUES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Issue: "No PostgreSQL database found"
+Fix: Create one! New + → PostgreSQL → Free tier
+
+Issue: "DATABASE_URL connection refused"
+Fix: Make sure you copied the INTERNAL url, not external
+
+Issue: "Backend still shows localhost in error"
+Fix: Environment variables not saved - check Environment tab
+
+Issue: "Changes not taking effect"
+Fix: Click "Manual Deploy" → "Deploy latest commit"
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Need help? Share your Render logs or error messages!

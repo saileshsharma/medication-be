@@ -19,11 +19,7 @@ python-dotenv==1.0.0
 pydantic==2.5.3
 pydantic-settings==2.1.0
 
-# AI/ML Libraries
-transformers==4.37.0
-torch==2.1.2
-scikit-learn==1.4.0
-numpy==1.26.3
+# AI/ML Libraries (lightweight - only what we actually use)
 nltk==3.8.1
 textblob==0.17.1
 

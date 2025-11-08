@@ -1,5 +1,5 @@
 from pydantic_settings import BaseSettings
-from typing import List
+from typing import List, Optional
 import os
 
 
@@ -20,7 +20,8 @@ class Settings(BaseSettings):
     DATABASE_URL: str = "postgresql://postgres:password@localhost:5432/pixelpirates"
     DATABASE_ECHO: bool = False
 
-    # Redis
+    # Redis - Support both REDIS_URL (Railway) and individual settings (local)
+    REDIS_URL: Optional[str] = None  # Railway provides this
     REDIS_HOST: str = "localhost"
     REDIS_PORT: int = 6379
     REDIS_DB: int = 0
@@ -46,12 +47,8 @@ class Settings(BaseSettings):
     RATE_LIMIT_PER_MINUTE: int = 60
     RATE_LIMIT_PER_HOUR: int = 1000
 
-    # CORS
-    CORS_ORIGINS: List[str] = [
-        "http://localhost:3000",
-        "http://localhost:19006",
-        "http://localhost:19000"
-    ]
+    # CORS - Allow mobile app in production
+    CORS_ORIGINS: List[str] = ["*"]  # Allow all origins for mobile app
     CORS_ALLOW_CREDENTIALS: bool = True
 
     class Config:

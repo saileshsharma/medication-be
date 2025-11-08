@@ -15,14 +15,22 @@ class CacheService:
     def __init__(self):
         """Initialize Redis connection"""
         try:
-            self.redis_client = redis.Redis(
-                host=settings.REDIS_HOST,
-                port=settings.REDIS_PORT,
-                db=settings.REDIS_DB,
-                password=settings.REDIS_PASSWORD if settings.REDIS_PASSWORD else None,
-                decode_responses=True,
-                socket_connect_timeout=2
-            )
+            # Use REDIS_URL if provided (Railway), otherwise use individual settings (local)
+            if settings.REDIS_URL:
+                self.redis_client = redis.from_url(
+                    settings.REDIS_URL,
+                    decode_responses=True,
+                    socket_connect_timeout=2
+                )
+            else:
+                self.redis_client = redis.Redis(
+                    host=settings.REDIS_HOST,
+                    port=settings.REDIS_PORT,
+                    db=settings.REDIS_DB,
+                    password=settings.REDIS_PASSWORD if settings.REDIS_PASSWORD else None,
+                    decode_responses=True,
+                    socket_connect_timeout=2
+                )
             # Test connection
             self.redis_client.ping()
             self.enabled = settings.ENABLE_CACHING

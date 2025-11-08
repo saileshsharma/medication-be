@@ -67,9 +67,9 @@ case $choice in
 
         echo -e "\n${YELLOW}Setting environment variables...${NC}"
         SECRET_KEY=$(openssl rand -hex 32)
-        railway variables set SECRET_KEY=$SECRET_KEY
-        railway variables set DEBUG=False
-        railway variables set ENVIRONMENT=production
+        railway variables --set "SECRET_KEY=$SECRET_KEY"
+        railway variables --set "DEBUG=False"
+        railway variables --set "ENVIRONMENT=production"
 
         echo -e "\n${YELLOW}Deploying application...${NC}"
         railway up

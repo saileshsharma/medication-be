@@ -25,7 +25,7 @@ That's it! Railway handles everything.
 npm i -g @railway/cli
 railway login
 railway init
-railway add --database postgresql
+railway add --database postgres
 railway add --database redis
 railway variables set SECRET_KEY=$(openssl rand -hex 32)
 railway up

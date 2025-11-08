@@ -60,7 +60,7 @@ case $choice in
         railway init
 
         echo -e "\n${YELLOW}Adding PostgreSQL...${NC}"
-        railway add --database postgresql
+        railway add --database postgres
 
         echo -e "\n${YELLOW}Adding Redis...${NC}"
         railway add --database redis

@@ -46,7 +46,7 @@ Complete guide for deploying Pixel Pirates Backend to production.
 4. **Add Database Services**
    ```bash
    # Add PostgreSQL
-   railway add --database postgresql
+   railway add --database postgres
 
    # Add Redis
    railway add --database redis

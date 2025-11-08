@@ -48,12 +48,18 @@ class Settings(BaseSettings):
     RATE_LIMIT_PER_HOUR: int = 1000
 
     # CORS - Allow mobile app in production
-    CORS_ORIGINS: List[str] = ["*"]  # Allow all origins for mobile app
+    CORS_ORIGINS: str = "*"  # Allow all origins for mobile app (can be comma-separated)
     CORS_ALLOW_CREDENTIALS: bool = True
 
     class Config:
         env_file = ".env"
         case_sensitive = True
+
+    def get_cors_origins(self) -> List[str]:
+        """Parse CORS origins from string"""
+        if self.CORS_ORIGINS == "*":
+            return ["*"]
+        return [origin.strip() for origin in self.CORS_ORIGINS.split(",")]
 
 
 settings = Settings()
